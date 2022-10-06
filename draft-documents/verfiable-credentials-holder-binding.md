@@ -4,7 +4,9 @@ by [Oliver Terbu](mailto:oliver.terbu@spruceid.com) - Spruce, [Paul Bastian](mai
 ) - Cloud Compass, [Ahamed Azeem](mailto:azeem.ahamed@danubetech.com) - Danube Tech
 
 # Working notes
-This will be removed when done
+This will be removed when done.
+Additional notes exist throughout the text as HTML-comments.
+
 **Dont use authorization or delegation**
 
 First things to do after RWoT
@@ -22,6 +24,9 @@ First things to do after RWoT
 **Editor management**
 - [ ] We need someone who can summarize a bit where we are now, and clarify unclear parts so that we can discuss and find paths forward for the unclearity. --> Zaïda can do this
 
+**Todo's before finalizing**
+- [ ] Revise Abstract
+- [ ] Remove meta-sections (target audience, message, and such)
 
 
 # Target Audience
