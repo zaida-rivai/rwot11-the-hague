@@ -17,9 +17,13 @@ First things to do after RWoT
 
 **Clean words an clarify termninology**
 - [ ] Rieks goes around and chops and pushes for better definition
+- [ ] Rieks to complete glossary (annex A)
 
 **Get a better working platform**
 - [ ] Oliver moves our document to a better place to be able to collaborate more contextual.
+
+**Figure updates**
+- [ ] Snorre to update https://drive.google.com/drive/folders/1L9oW1QP1fi3iOoiANoWFly0eYscrVFHN - see the notes where the picture is inserted.
 
 **Editor management**
 - [ ] We need someone who can summarize a bit where we are now, and clarify unclear parts so that we can discuss and find paths forward for the unclearity. --> Zaïda can do this
@@ -27,6 +31,7 @@ First things to do after RWoT
 **Todo's before finalizing**
 - [ ] Revise Abstract
 - [ ] Remove meta-sections (target audience, message, and such)
+- [ ] Sort the glossary alphabetically
 - [ ] Check the contents of the documents for correct use of terminology, which must result in a guarantee that wherever a term is used that is defined in the glossary (appendix a), it is used in the meaning as defined.
 
 # Target Audience
@@ -85,7 +90,7 @@ Notes from bottom
 - verify that the holder is authorized to present the credential
 - ...
 
-TBD: A method to validate that the intended [**which party has the intended intention?**] Holder presented a set of VCs wrapped in a VP.
+TBD: A method to validate that the intended [**RJ: which party has the intended intention?**] Holder presented a set of VCs wrapped in a VP.
 
 It binds the following together:
 
@@ -95,7 +100,7 @@ Holder of the VC (even if vp.holder.id is undefined) [**RJ: 'Holder of a VC' mus
 Proof in the VP
 Proof in the VC
 
-Verifying a verifiable presentation does not include verifying the binding between the verifiable credential subject and the verifiable presentation holder. There is no normative reference for any existing approach. [**One reason for this is that there is no VC subject, which therefore cannot be bound**]
+Verifying a verifiable presentation does not include verifying the binding between the verifiable credential subject and the verifiable presentation holder. There is no normative reference for any existing approach. [**RJ: One reason for this is that there is no VC subject, which therefore cannot be bound**]
 
 For these reasons, this paper describes a mechanism and a data model that allows Holders and/or Issuers to indicate how the Holder Binding can be verified at the time of presentment. Binding multiple Verifiable Credentials to a Holder should be possible. The W3C Verifiable Credentials Data Model 1.1 specification which is essentially equivalent to no guidance on the Holder Binding is provided. This mechanism is fully backward compatible with existing verifiable credentials and verifiable presentations. This paper does not mandate a specific form of holder binding or W3C Verifiable Credential proof type or format. Instead it provides a framework for Issuers, Holders and Verifiers to provide guidance on how Holder Binding can be checked deterministically according to their intentions.
 
@@ -135,7 +140,7 @@ Since it is the party on whose behalf the verification component will be making 
 
 ### Definitions/glossary
 
-Holder Binding is providing the verifier the means to verify that the presentation was done by the credential subject or the holder designated by the credential subject. this may or may not include authentication.
+Holder Binding is providing the verifier the means to verify that the presentation was done by the credential subject or the holder designated by the credential subject. [**RJ: the previous sentence is highly ambiguous and needs to be reworded once we have consensus over what it shoulc mean**] this may or may not include authentication.
 
 ### Implications
 
@@ -200,7 +205,7 @@ Note that parties that add these properties, do this as a service to verifying p
 
 
 #### What
-In this scenario we want to make sure that the verifier can trust that the credentials presented to them is provided to the rightful controller, Alice, even if the holder-component(wallet) is different. Also potentially any identifier provided in the issuance exchange.
+In this scenario we want to make sure that the verifier can trust that the credentials presented to them is provided to the rightful controller [**RJ: pls. specify a criterion that enables all of us to determine what is (not) a 'rightful controller'**], Alice, even if the holder-component(wallet) is different. Also potentially any identifier provided in the issuance exchange.
 
 The proposal provided in this document, can make this feasable with a specific holder-binding type, defined for a scenario like this. Meaning this mechanism does not hinder any specific use cases.
 
@@ -211,18 +216,20 @@ The proposal provided in this document, can make this feasable with a specific h
 Alex works at Anon Corp. in Amsterdam and needs to fly for business to Milan.
 In order for the HR department to book a ticket for her, the airline company requires Alex's proof of vaccination against Covid-19 issued by one of the trusted European government health agencies.
 
-Alex's proof of vaccination contains Alex's name and surname, birthdate, vaccine brand, number of vaccinations (i.e., one, two, three, four) and a unique identifier and has been issued to her by the Dutch National Institute for Public Health and the Environment (RIVM).
+Alex's proof of vaccination contains Alex's name and surname, birthdate, vaccine brand, number of vaccinations (i.e., one, two, three, four) and a unique identifier [**RJ: What does this identifier identify? Does it identify Alex? Or the proof of vaccination? Something else? Or is it the identifier that the Dutch govt use to identify her citizens (the BSN)?**] and has been issued to her by the Dutch National Institute for Public Health and the Environment (RIVM).
 
 To avoid unnecessary correlation, Alex removes the unique identifier from her certificate, which the verifier does not require on the website, and sends over to the HR department only the claims that are relevant for the booking to continue, in a way that still provides the verifier guarantees about the authenticity of those claims and the issuer of the certificate.
 The HR department then fills in the information required to continue with the booking of the flight ticket, which is then sent to Alex.
 The flight ticket is also modeled as a Verifiable Credential, and contains Alex's name, surname and birthdate *as specified on the provided Covid-19 certificate*, seat reserved, flight number, date and time.
 
+[**RJ: I have serious problems with the above. First, Alex cannot remove stuff from her certificate without invalidating the issuer's signature, rendering the modified certificate useless. Second, she does not have a clue what data this particular airline needs for booking, unless she is somehow involved in the actual booking process. The workflow simply doesn't work this way. How about this: Alex (electronically) requests the HR dept to book a flight for her from Amsterdam to Milan. Within the context of that session, HR goes to the booking site, which requests a VP that contains (a) a claim (issued by an official govt org) that enables arbitrary parties to physically identify and authenticate Alex (so it would contain a profile picture of Alice's face and a name, surname, and birthdate); (b) a claim (issued by one of the trusted European government health agencies) the contents of which would typically/regulatory convince arbitrary parties that she is adequately protected against COVID (c) a proof that the subject of claim (a) is also the subject of claim (b), and (d) perhaps some other data, e.g. preferred seat, flight number, date and time. The HR dept requests Alex to present a VP that contains claims (a) and (b) and proof (c), to which Alex complies with the requested VP. Then, HR sends this VP together with the other data (d) to the booking site, pays for the ticket, and requests a VC that contains (a claim containing) the ticket, and can be linked to Alice (e.g. by mentioning Alex's name, surname and birthdate _as specified on her identification/authentication credential_), and further specifies the seat reserved, flight number, date and time.). HR sends this VC to Alice, who stores it in her wallet and can then present it, together with claims (a) (b) and (C) at the checkin/gate upon departure.**]
+
 A reasonable solution would allow Alex and nobody else to prove, at boarding time, the relation between Alex’s person and the claims in the flight ticket, without necessarily revealing more information than required for the airline company to let Alex on the plane.
 Hence, at boarding time, Alex presents to the gate steward her picture, name, surname, and birthdate from her digital ID document.
 The only digital ID document that can be considered valid by the gate steward is the one with a profile picture that matches Alex's face, along with a matching name, surname, and birthdate as on the flight ticket.
-Because the booking system made sure that the name, surname and birthday on the ticket match those in the Covid-19 certificate provided at booking time, there is no need for Alex to present again her vaccination certificate, as a valid ticket already implies a valid vaccination certificate for a person with the specified name, surname, and birthdate.
+Because the booking system made sure that the name, surname and birthday on the ticket match those in the Covid-19 certificate provided at booking time, the boarding officer will only request Alex for a presentation that contains claim (a) and the ticket-claim, because the booking process provides the guarantees that having a valid ticket-claim implies she must also have a valid vaccination certificate.
 
-A valid presentation allows Alex to prove she is the rightful owner of the flight ticket and board on the plane.
+So, at the gate, Alex produces the requested VP, the boarding officer checks the photo to ensure it is Alex that is boarding, and the officer verifies that the name, surname and date of birth on the identification/authentication claim and on the ticket claim are identical.
 
 ### Verifiable credentials for objects
 
@@ -640,11 +647,6 @@ TBD
 
 ## Annex A - Terminology
 
-[**TODOs:**
-- [ ] **RJ: Complete the descriptions**
-- [ ] **Editor: sort the table**
-]
-
 | term | description |
 | ---- | :---------- |
 | subject | the (single, real-world) [entity](https://essif-lab.github.io/framework/docs/essifLab-glossary#entity) to which a given set of coherent data relates/pertains. Examples of such sets include [attributes](https://essif-lab.github.io/framework/docs/essifLab-glossary#attribute), claims/[assertions](https://essif-lab.github.io/framework/docs/essifLab-glossary#assertion), files/dossiers, (verifiable) [credentials](https://essif-lab.github.io/framework/docs/essifLab-glossary#credential), ([partial](https://essif-lab.github.io/framework/docs/essifLab-glossary#partial-identity)) [identities](https://essif-lab.github.io/framework/docs/essifLab-glossary#identity), [employment contracts](https://essif-lab.github.io/framework/docs/essifLab-glossary#employment-contract), etc. (Source: [eSSIF-Lab](https://essif-lab.github.io/framework/docs/essifLab-glossary#subject)) |
@@ -658,5 +660,3 @@ TBD
 | Issuer component | digital component that has the capability of issuing credentials |
 | Verifier component | digital component that has the capability of requesting presentations, receiving responses to such requests, and checking the various proofs therein. |
 | Validation component | digital component that has the capability of determining whether or not a set of data is valid (according to criteria established by its [principal](https://essif-lab.github.io/framework/docs/essifLab-glossary#principal) for futher processing for the purpose of realizing some [objective](https://essif-lab.github.io/framework/docs/essifLab-glossary#objective) of that principal. |
-
-    3. securely storing VCs on behalf of its principal, and providing access to these VCs according to an access policy of its principal (which we assume here wouuld allow any wallet component to read/write VCs)
