@@ -42,6 +42,8 @@ First things to do after RWoT
 
 The W3C Verifiable Credentials Data Model (VCDM) does not define how to bind a W3C Verifiable Presentation to the Subject of the verifiable credentials included in the presentation, so that the Verifier can ensure that the Holder of the presentation is the **designated**, **rightful** or **intended** holder of the verifiable credential. This includes the ability to validate that included and potentially multiple credentials in the presentation relate to the same Subject or the designated Holder of the Subject without the necessity to disclose or require unique identifiers for Holder and Subject. For the sake of this paper, this ability is called **Holder Binding**. This paper describes the context, use cases, limitations of and extensions to the existing VCDM as well as specific types of Holder Binding to faciliate interoperability across vendors and domains. The proposed solution acknowledges that types of Holder Binding can vary depending on usecase, domain and requirements which is the reason why the proposed solution includes a registry as an extension mechanism. 
 
+The remainder of this paper is structured as follows: in the first chapter we will provide background information and define the *Holder Binding* problem. In chapter two we will elaborate on the problem definition. For even better understanding of the problem definition we will provide several use cases in chapter three. In chapter four, we propose a model and mechanism to solve the *holder-binding problem*. Last, we will conclude the discussion in chapter five. 
+
 <!-- Rieks note: there is a difference in the mental model of AnonCreds (that are issued to a M-Secret, which is important, the holder) and in VC there's the idea of claims (in a VC) and the holder isn't all that important (doesn't appesar in VC)
 
 RJ2: We need some text about how holder binding for VCs would differ from that for AnonCreds (perhaps others - X.509 attribute certs)
@@ -57,7 +59,69 @@ The remainder of this paper is structured as follows:
 - Proposal
 - Conclusion and next steps
 
-## The Problem to solve
+## 1. Introduction 
+
+<!-- @Rieks, @Zaida: what does it mean for Parties if holderbinding stuff gets included in VCs and VPs, and in the VPs only! -->
+
+All SSI technologies exist to support individuals and [parties](https://essif-lab.github.io/framework/docs/essifLab-glossary#party) as they need exchange [information](https://essif-lab.github.io/framework/docs/essifLab-glossary#information) which takes the form of digital components that act in their behalf exchanging [data](https://essif-lab.github.io/framework/docs/essifLab-glossary#data). In other words, every [party](https://essif-lab.github.io/framework/docs/essifLab-glossary#party) will need to control a set of digital components, such as mobile phones, apps in the cloud, etc. that provide functionalities that have a role in such data exchange. Within SSI, we are familiar with functionalities that we call:
+- **issuing** i.e.: (1) receive a request for issuing a VC, (2) decide whether to accept or reject that request, if accepted, (3) take the data to construct the requested VC, (4) add metadata, (5) sign it on behalf of the party on whose behalf they act (their [principal](https://essif-lab.github.io/framework/docs/essifLab-glossary#principal)) and (6) send it to the requester in response to its request.
+- **holding** i.e.:
+    1. send requests for obtaining credentials (to digital components of other parties that have issuing functionality), get  the credentials out of the response, and store them in an EDV-component
+    2. receive presentation requests, decide whether or not to accept the request, send these requests for appropriate VCs to the EDV, construct a presentation from these VCs by addding metadata and a signature on behalf of its [principal](https://essif-lab.github.io/framework/docs/essifLab-glossary#principal) and send it to the requester.
+    3. securely storing VCs on behalf of its principal and providing access to these VCs according to an access policy of its principal (assumed is that any wallet component would read and/or write VCs).
+- **verifying** i.e.: (1) create presentation requests (including those for specific claims) from VCs that are issued on behalf of, possibly multiple parties, (2) sending these requests to wallet components, (3) receiving responses and verifying the various proofs to ensure the content hasn't been tampered with and that the credentials probably originate from designated parties.
+
+### 1.1 Digital Components
+We use the following terms to refer to digital components that have at least the following functionality:
+- EDV: holder functionality #3 (storing VCs)
+- Issuer component: issuing functionality
+- Wallet: holder functionalties #1 and #2
+- Verifier component: verifiying functionality
+
+Parties typically have digital components that together provide all of the issuing, holding and verifiying functionalities, i.e. wallets, issuer- and verifier components and EDVs. When we say that a party issues a VC, this means that an issuer-component of that party is doing the actual work related to that issuing.
+
+It is up to the parties (not the digital components) to decide which (kinds of) VCs to issue, determine the keys that are to be used, as well as what (kinds of) VCs to request (and from whom), etc. In order for the appropriate digital component to operate as intended by its principal, it will need some kind of [policy](https://essif-lab.github.io/framework/docs/essifLab-glossary#policy) that it can use such that it would actually act in accordance with its principals intentions. The creation and maintenance of such policies is part of the party's [governance](https://essif-lab.github.io/framework/docs/essifLab-glossary#governance) and out of scope of this paper.
+
+
+### 1.1.1 Further note 
+
+Statements that a party "*does something*" do not necessarily mean that person did that thing. Rather, a party is responsible for an action only if that party had a component that performed an operation that made this action happen. Considering just an instance of a credential, when we speak of a credential being issued, this process has an issuing component and a wallet component. When a credential is issued on behalf of a party, the latter (wallet component) is accepted and stored by a requesting party. The phrase "*Party Z has requested a presentation*" or *"Alice has created a presention*", etc., no matter what context they are in, is typically understood as a means that the party has a component with the appropriate functionality for the task including a [policy](https://essif-lab.github.io/framework/docs/essifLab-glossary#policy) (authored by that party) that guides the details of how the actual work needs to be done.
+
+## 1.2 Implications
+TBD
+
+## 1.3 Holder binding with multiple verifiable credentials
+<!--  There is also a paragraph in the problem definition section about this, shall we merge these? -->
+linking credentials with
+ - holder DIDs
+ - link secrets
+ - matching attributes/claims
+to leverage  holder binding 
+
+TBD Paul
+
+## 1.4 Problem to solve
+
+In order for parties to realize some objective of theirs, they may need data and process that to obtain results that constitute the realization thereof. This data must be valid to be (further) processed in order for the result to be valid (useful). In order to be able to construct policies that verifier components need (to construct presentation requests), a party must know which other parties offer to issue credentials that contain such data, and also they must be able to decide (based on the details of the offering), whether or not the data will be valid for the purpose it would be requested. 
+
+This means that parties that offer to issue credentials, need to 'advertise' their offering, and make sure such 'advertisements' refer to any assurances that the party can provide and a party that looks for it can use to decide whether or not the offering can be used (would result in valid data to be obtaind.)
+
+Such assurances could, e.g. be a statement saying how the data that is in a VC has been obtained (e.g. personal data comes from a KYC process, a diagnosis has been made by a official doctor). In this paper we focus on a specific assurance that can be provided, and that consists of the ability for verification components to check wether a presentation that it receives has been created by the component and/or on behalf of the party to which one or more of the VCs have been issued.
+
+Since it is the party on whose behalf the verification component will be making such checks will suffer any adverse consequences (risks), it is the duty of that party to ensure the verification policy is constructed such that the verification component makes the intended checks.
+
+#### Definitions/glossary  
+
+Holder Binding is providing the verifier the means to verify that the presentation was done by the credential subject or the holder designated by the credential subject. this may or may not include authentication. 
+
+### Implications
+
+<!-- what does it mean for Parties if holderbinding stuff gets included in VCs and VPs, and in the VPs only! 
+* difference in semantics -->
+
+TBD 
+
+# 2. Problem definition
 
 The verifier may need assurances that the person (or organization - which we from henceforth refer to as a [party](https://essif-lab.github.io/framework/docs/essifLab-glossary#party)) <!-- (maybe entity? No, because anything that exists is an entity, so a stone or a cow are also entities; I would like to not include them here) --> on whose behalf a wallet(like) component has sent a presentation to the verifier, relates to a specific subject<!-- may talk aboUt wallets aswell here as our use case shows it-->  in one (or more) claims of the VCs in the presentation. The problem is that there currently is no well-defined method that the verifier can apply to obtain the assurances that it needs while leaving the (person or organization) in control for ???.
 
@@ -92,55 +156,6 @@ Verifying a verifiable presentation does not include verifying the binding betwe
 
 For these reasons, this paper describes a mechanism and a data model that allows Holders and/or Issuers to indicate how the Holder Binding can be verified at the time of presentment. Binding multiple Verifiable Credentials to a Holder should be possible. The W3C Verifiable Credentials Data Model 1.1 specification which is essentially equivalent to no guidance on the Holder Binding is provided. This mechanism is fully backward compatible with existing verifiable credentials and verifiable presentations. This paper does not mandate a specific form of holder binding or W3C Verifiable Credential proof type or format. Instead it provides a framework for Issuers, Holders and Verifiers to provide guidance on how Holder Binding can be checked deterministically according to their intentions.
 
-## Context 
-
-<!-- @Rieks, @Zaida: what does it mean for Parties if holderbinding stuff gets included in VCs and VPs, and in the VPs only! -->
-
-All SSI technologies exist to support individuals and organizations (which we will collectively refer to as [parties](https://essif-lab.github.io/framework/docs/essifLab-glossary#party)) as they need exchange [information](https://essif-lab.github.io/framework/docs/essifLab-glossary#information) which takes the form of digital components that act in their behalf exchanging [data](https://essif-lab.github.io/framework/docs/essifLab-glossary#data).
-
-So, every [party](https://essif-lab.github.io/framework/docs/essifLab-glossary#party) will need to control a set of digital components, such as mobile phones, apps in the cloud, etc. that provide functionalities that have a role in such data exchange. Within SSI, we are familiar with functionalities that we call:
-- issuing: i.e. receive a request for the issuing of a VC, decide whether to accept or reject that request, and if accepted: take the data so as to construct the requested (kind of) VC, add metadatsign it on behalf of the party on whose behalf they act (their [principal](https://essif-lab.github.io/framework/docs/essifLab-glossary#principal))and send it to the requester in response to its request.
-- holding: i.e.:
-    1. send requests for obtaining credentials (to digital components of other parties that have issuing functionality), get  the credentials out of the response, and store them in a EDV-component
-    2. receive presentation requests, decide whether or not to accept the request, then send requests for appropriate VCs to the EDV, and construct a presentation from these VCs, addding metadata and a signature on behalf of its [principal](https://essif-lab.github.io/framework/docs/essifLab-glossary#principal), and send it to the requester.
-    3. securely storing VCs on behalf of its principal, and providing access to these VCs according to an access policy of its principal (which we assume here wouuld allow any wallet component to read/write VCs)
-- verifying: i.e. create presentation requests (which include requests for specific (claims from) VCs that are issued on behalf of possibly multiple parties), sending such requests to wallet components, receiving responses and testing/verifying the various proofs to ensure the contents hasn't been tampered with and the credentials/claims provably originate from designated parties.
-
-We use the following terms to refer to digital components that have at least the following functionality:
-- EDV: holder functionality #3 (storing VCs)
-- Issuer component: issuing functionality
-- Wallet: holder functionalties #1 and #2
-- Verifier component: verifiying functionality
-
-Parties typically have digital components that together provide all of the issuing, holding and verifiying functionalities, i.e. wallets, issuer- and verifier components and EDVs. When we say that a party issues a VC, this means that an issuer-component of that party is doing the actual work related to that issuing.
-
-It is up to the parties (and NOT: the digital components) to decide which (kinds of) VCs to issue, determine the keys that are to be used, as well as what (kinds of) VCs to request (and from whom), etc. In order for the appropriate digital component to operate as intended by its principal, it will need some kind of [policy](https://essif-lab.github.io/framework/docs/essifLab-glossary#policy) that it can use such that it would actually act in accordance with its principals intentions. The creation and maintenance of such policies is part of the party's [governance](https://essif-lab.github.io/framework/docs/essifLab-glossary#governance) and out of scope of this paper.
-
-Note: when we say that a party does something, this should be understood to mean that the party has/controls a component that does the operational work involved. So, when we say that a party has issued a credential to another party, this should be understood to mean that there is an issuing component that has construted this credential on behalf of the first party, and sent it to a wallet component that requested it, received it and stored it on behalf of the second party. Phrases such as "Party Z has requested a presentation", "Alice has created a presention", etc., should also be understood to mean that the party has/controls a component that has the appropriate functionality for the task, and also has a [policy](https://essif-lab.github.io/framework/docs/essifLab-glossary#policy) (authored by that party) that guides the details of how the actual work needs to be done. 
-
-In order for parties to realize some objective of theirs, they may need data and process that to obtain results that constitute the realization thereof. This data must be valid to be (further) processed in order for the result to be valid (useful). In order to be able to construct policies that verifier components need (to construct presentation requests), a party must know which other parties offer to issue credentials that contain such data, and also they must be able to decide (based on the details of the offering), whether or not the data will be valid for the purpose it would be requested. 
-
-This means that parties that offer to issue credentials, need to 'advertise' their offering, and make sure such 'advertisements' refer to any assurances that the party can provide and a party that looks for it can use to decide whether or not the offering can be used (would result in valid data to be obtaind.)
-
-Such assurances could, e.g. be a statement saying how the data that is in a VC has been obtained (e.g. personal data comes from a KYC process, a diagnosis has been made by a official doctor). In this paper we focus on a specific assurance that can be provided, and that consists of the ability for verification components to check wether a presentation that it receives has been created by the component and/or on behalf of the party to which one or more of the VCs have been issued.
-
-Since it is the party on whose behalf the verification component will be making such checks will suffer any adverse consequences (risks), it is the duty of that party to ensure the verification policy is constructed such that the verification component makes the intended checks.
-
-### Definitions/glossary  
-
-Holder Binding is providing the verifier the means to verify that the presentation was done by the credential subject or the holder designated by the credential subject. this may or may not include authentication. 
-
-### Implications
-
-<!-- what does it mean for Parties if holderbinding stuff gets included in VCs and VPs, and in the VPs only! 
-* difference in semantics -->
-
-TBD 
-
-### On-site and remote holder binding
-
-There is a variety of use cases that include different types of holder binding and can usually be distinuished into two categories, "on-site" and "remote" as the location of the verifier has a significant influence on the trust relationship between the holder and the verifier. In the "on-site" case, holder binding works like identification processes equivalent to classical, analog ID documents: The verifier requests a credential and the holder transmits a verifiable presentation of his VC. The communication channel here can take place "offline" via connections such as NFC, Bluetooth or Wifi, or "online" if both the wallet of the holder and the verifier are connected to the Internet. If there is visual contact, the verifier can perform a simple identification of the holder using biometric data verified by the issuer and stored as claims in the VC. The transmission of biometric data is always critical from a privacy point of view and should be avoided if possible. However, direct physical contact allows the holder to easily authenticate the verifier so that he can better assess the implications of his data being released. Holder binding (e.g. with biometric identification) in the remote use case introduces significant technical complexity and privacy risks. A wallet must authenticate the holder itself or leave it to a trusted verifier, depending on the use case. At the same time, it must enable unique identification of the communication partner so that it provides the holder with the tools for a self-sovereign decision.
-
 ### holder binding with multiple VCs
 linking credentials with
  - holder DIDs
@@ -150,16 +165,22 @@ to leverage  holder binding
 
 tbd Paul
 
-## Use Cases
+# 3. Use Cases
+
+## 3.1 On-site and remote holder binding
+
+There is a variety of use cases that include different types of holder binding and can usually be distinuished into two categories, "on-site" and "remote" as the location of the verifier has a significant influence on the trust relationship between the holder and the verifier. In the "on-site" case, holder binding works like identification processes equivalent to classical, analog ID documents: The verifier requests a credential and the holder transmits a verifiable presentation of his VC. The communication channel here can take place "offline" via connections such as NFC, Bluetooth or Wifi, or "online" if both the wallet of the holder and the verifier are connected to the Internet. If there is visual contact, the verifier can perform a simple identification of the holder using biometric data verified by the issuer and stored as claims in the VC. The transmission of biometric data is always critical from a privacy point of view and should be avoided if possible. However, direct physical contact allows the holder to easily authenticate the verifier so that he can better assess the implications of his data being released. Holder binding (e.g. with biometric identification) in the remote use case introduces significant technical complexity and privacy risks. A wallet must authenticate the holder itself or leave it to a trusted verifier, depending on the use case. At the same time, it must enable unique identification of the communication partner so that it provides the holder with the tools for a self-sovereign decision.
 
 This section will contextualize the problem with usecases that has come from the community.
 
-### Multiple wallets and issuers
+### 3.2 Multiple wallets and issuers
 
 ![](https://i.imgur.com/d1TvdNW.png)
 Source: https://drive.google.com/drive/folders/1L9oW1QP1fi3iOoiANoWFly0eYscrVFHN
 
 ***Note: the texts in the figure needs to be aligend with that below. The text below is authoritative in this respect.***
+
+#### 3.2.1 Background
 
 The figure above illustrates this use-case, where a person (Alice) has multiple 
 wallets WX, WY and WZ (e.g. an app on her mobile phone, one in the cloud via a web app, and one as a browserplugin). Alice has an Encrypted Data Vault (EDV) that holds the credentials that her wallets obtain, and can provide them to any of her wallets as they need them to construct a presentation.
@@ -170,6 +191,8 @@ Wallets WX and WY have requested a VC from party X and Party Y respectively, obt
 
 The figure shows another party (Party Z), whose verifying component has sent a request to WZ to return a presentation that contains the two credentials that WX and WY obtained and stored in Alice's EDV. So, WZ will access Alice's EDV, get both credentials, turn them into a presentation that it then sends it in response to the request.
 
+#### 3.2.2 Scenario
+
 The current VCDM does not provide party Z with a mechanism that enables it to know to which party a VC has been issued, nor to which component it has been issued (where AnonCreds have the implicit property that everything that is sent from a wallet to a verifying component is guaranteed to have been issued to that same wallet). While there are many use-cases in which this is of no importance, there are also situations where it *does* matter.
 
 Here are some examples:
@@ -178,6 +201,8 @@ Here are some examples:
 2. [***summary of use-case yyy to be written***]. In this case, party Z would want to be sure that CredX has been issued to the same wallet as CredY.
 3. [***summary of use-case zzz to be written***]. In this case, party Z would want to be sure that CredX has been issued to the party on whose behalf the presentation was constructed.
 4. [***summary of use-case ...(etc.) to be written***]. In this case, party Z would want to be sure that ....
+
+#### 3.2.3 Model
 
 We propose to (optionally) add two properties to a VC, and another two (optional) properties to a VP, with the following semantics:
 - the property: `holderComponent` specifies the component to which the VC/VP has been issued, by providing a number of mechanisms that a verifier can use to identify and authenticate the component to which the VC was issued, c.q. that created the VP;
@@ -192,23 +217,27 @@ When parties that issue VCs c.q. construct VPs were to include these properties 
 Note that parties that add these properties, do this as a service to verifying parties, not to serve (or create) some legal obligation. Issuing parties would mention this in the advertisement (as expalined in the introduction)A party would add these properties to a VC, and advertise this,
 
 
-#### What
+#### 3.2.4 Further Note
 In this scenario we want to make sure that the verifier can trust that the credentials presented to them is provided to the rightful controller, Alice, even if the holder-component(wallet) is different. Also potentially any identifier provided in the issuance exchange.
 
 The proposal provided in this document, can make this feasable with a specific holder-binding type, defined for a scenario like this. Meaning this mechanism does not hinder any specific use cases.
 
+### 3.3 Deferred Verification
 
-
-### Deferred Verification
+#### 3.3.1 Background
 
 Alex works at Anon Corp. in Amsterdam and needs to fly for business to Milan.
 In order for the HR department to book a ticket for her, the airline company requires Alex's proof of vaccination against Covid-19 issued by one of the trusted European government health agencies.
 
 Alex's proof of vaccination contains Alex's name and surname, birthdate, vaccine brand, number of vaccinations (i.e., one, two, three, four) and a unique identifier and has been issued to her by the Dutch National Institute for Public Health and the Environment (RIVM).
 
+#### 3.3.1 Scenario
+
 To avoid unnecessary correlation, Alex removes the unique identifier from her certificate, which the verifier does not require on the website, and sends over to the HR department only the claims that are relevant for the booking to continue, in a way that still provides the verifier guarantees about the authenticity of those claims and the issuer of the certificate.
 The HR department then fills in the information required to continue with the booking of the flight ticket, which is then sent to Alex.
 The flight ticket is also modeled as a Verifiable Credential, and contains Alex's name, surname and birthdate *as specified on the provided Covid-19 certificate*, seat reserved, flight number, date and time.
+
+#### 3.3.2 Model
 
 A reasonable solution would allow Alex and nobody else to prove, at boarding time, the relation between Alex’s person and the claims in the flight ticket, without necessarily revealing more information than required for the airline company to let Alex on the plane.
 Hence, at boarding time, Alex presents to the gate steward her picture, name, surname, and birthdate from her digital ID document.
@@ -217,11 +246,16 @@ Because the booking system made sure that the name, surname and birthday on the 
 
 A valid presentation allows Alex to prove she is the rightful owner of the flight ticket and board on the plane.
 
-### Verifiable credentials for objects
+A similair example is defined in use case 5.3 in W3C's Verifiable Credentials Use Cases (Verifiable Credentials Use Cases, 2019). 
 
+### 3.4 Verifiable credentials for objects
+
+#### 3.4.1 Background
 A VC can be used for asserting claims about an object, e.g., VCs for food and raw materials are used for enhancing [supply chain security](https://www.ledgerinsights.com/homeland-security-dhs-blockchain-credentials-imports-transmute/), or even as enabler of [circular economy](https://epub.wupperinst.org/frontdoor/index/index/docId/7940). However, such objects not only lack the computational capabilities required for generating a Verifiable Proof, but they also have multiple owners during their lifetime.
 
 Let's consider for example the case of a VC used in each package of coffee "Espresso Italiano". This VC  includes information related to the coffee type, country of origin, production and expiration date. That VC is issued by the packaging factory "Best Coffee" and it is printed in the corresponsing packaging itself using a QRcode.
+
+#### 3.4.2 Scenario
 
 Alex, a lorry driver, transfers from "Best Coffee" factory a pallet that includes 1000 packages of "Espresso Italiano", therefore Alex becomes the holder of the corresponding VCs. Alex delivers the pallet to super maket "Billy's market". At the same time, Alex "presents" the credentials to the stock manager system of "Billy's market" 
 
@@ -284,7 +318,7 @@ Alex, a lorry driver, transfers from "Best Coffee" factory a pallet that include
 }
 ```
 
-### Parents-Child Relationship
+### 3.4 Parents-Child Relationship
 
 :::warning
 TBD: perhaps dog and dog holder is a better example?
@@ -298,7 +332,7 @@ Notes from bottom: Parent that want to enroll child into primary school, then li
 TBD: add more examples
 :::
 
-## Proposal
+# 4. Proposal
 
 Because there are many different options, a Verifier usually needs to guess the intended method for Holder Binding which is an issue for interoperability. Having the Verifier to have this knowledge pre-populated would prevent interoperability as well. Guessing the method is prone to side effects which might compromise security.
 
@@ -306,7 +340,8 @@ To acknowledge the diversity of the different options, this proposal assumes the
 
 This proposal defines the a `holderBinding` property for the determination of the Holder Binding method between the VP and included VCs to allow verification of the intended/rightful/designated Holder of the VCs at the time of presentment. The `holderBinding` MAY be included in VCs and/or in VPs. If the `holderBinding` property is included in one VC and in the VP, verifiers MUST ensure the `holderBinding` in the VP is allowed by the `holderBinding` type of the VC.
 
-**holderBinding**
+## 4.1 The holderBinding property
+
 If present in the VP or VC, the value of the `holderBinding` property MUST include the following:
 - `type` property, which expresses the Holder Binding method type. It is expected that the value will provide enough information to determine the Holder Binding method between the VP and included VCs.
 - TBD: (OPTIONAL) linked VCs, index/id?
@@ -321,7 +356,7 @@ Each Holder Binding method MUST define how Holder Binding for an input VP and on
 
 Each Holder Binding method MUST define how Holder Binding for an input VP and one or more input VCs contained in the VP can be deterministically verified. For example, a simple Holder Binding method might define that for a given input VP Holder Binding could be verified based on checking that the holder property matches the `credentialSubject.id` property in every `verifiableCredential` object in the VP.
 
-### Relationship to existing VC Data Model
+## 4.2 Relationship to existing VC Data Model
 
 :::warning
 TBD: why proof property in VP is not sufficient. to enable reusage of existing data integrity proof types for holder binding without changing data integrity proof suites or JWT algorithms etc., and seggregation of semantic concerns, e.g., data integrity vs ...
@@ -339,7 +374,7 @@ TBD: some diagram that shows some graph between VC, VP, etc.
 TBD: verifiers will get the ability to map holder binding types to policies, e.g., authentictation assurance levels (NIST, ISO, eIDAS etc.), and ask for specific types in VC/VP requests.
 :::
 
-### Implementer Considerations
+## 4.3 Implementer Considerations
 
 Typically, implementers use 
 
@@ -356,9 +391,9 @@ registerBinding(type1, type2, type3)
 vp.verifyBinding(...)
 ```
 
-### Examples
+## 4.4 Examples
 
-#### Subject-Holder Correlation Binding
+### 4.4.1 Subject-Holder Correlation Binding
 :::warning
 TBD: description (oliver)
 
@@ -369,7 +404,7 @@ simplest binding where holder.id == vc.credentialSubject.id and isValid(vp.proof
 TBD: data model (oliver)
 :::
 
-#### Relationship Credentials Binding
+### 4.4.2 Relationship Credentials Binding
 
 :::warning
 TBD: description (snorre)
@@ -381,7 +416,7 @@ included VCs have different credential subject identifiers but binding is establ
 TBD: data model
 :::
 
-#### Out-of-band Binding
+### 4.4.3 Out-of-band Binding
 
 :::warning
 TBD: description (mohammed)
@@ -394,7 +429,7 @@ e.g., credentialSubject.firstName/lastName/... equals claims in a passport.
 TBD: data model (mohammed)
 :::
 
-#### DID-based Binding
+### 4.4.4 DID-based Binding
 
 :::warning
 TBD: description (mohammed)
@@ -429,7 +464,7 @@ The VC is issued to one of the DID controlled by the subject of the verifiable c
 ```
 
 
-### Bearer Credential
+## 4.5 Bearer Credential
 
 :::warning
 TBD: description (mohammed)
@@ -440,7 +475,7 @@ type: binding is done based on purelely possessing the VC
 TBD: data model
 :::
 
-### Delegation-based Binding
+## 4.6 Delegation-based Binding
 
 :::warning
 TBD: description (oliver)
@@ -450,7 +485,7 @@ TBD: description (oliver)
 TBD: data model (oliver)
 :::
 
-### AnonCreds
+## 4.7 AnonCreds
 
 This mechanism might be able to be used in the following way for AnonCreds.
 
@@ -475,7 +510,7 @@ In each VP, the holder would provide proof that they possess the link secret tha
 
 
 
-## Data Models
+## 4.8 Data Models
 
 ```
 
@@ -547,12 +582,13 @@ vp:
    }]
 }
 ```
-# Future work
+# 5. Conclusion and Future work
 Delegation
 
 # Appendix
 
-### Whiteboard statement
+# Appendix I: Whiteboard statement
+
 
 Holder shall prove control of VC/claims/subject identifier, verifiers should be **guided** to how and what risks...
 
@@ -560,7 +596,7 @@ NOTE: should we also mention issues in this formulation?
 
 
 
-## Terminology
+## Appendix II: Terminology
 
 ### Holder
 TBD:
@@ -584,7 +620,7 @@ TBD: perhaps not needed
 TBD: distinction between binding and linking
 
 
-## Credential Format Considerations
+## Appendix III: Credential Format Considerations
 
 ### Data Integrity Proofs
 
@@ -629,4 +665,9 @@ TBD
 ## Considerations
 
 - multiple wallet types (as must be expected under eIDAS 2)
-- 
+
+
+# References 
+
+1. eSSIF-Lab Glossary | eSSIF-Lab. (2021, November 19). Retrieved October 8, 2022, from https://essif-lab.github.io/framework/docs/essifLab-glossary/
+2. Verifiable Credentials Use Cases. (2019, September 24). Retrieved October 8, 2022, from https://www.w3.org/TR/vc-use-cases/
