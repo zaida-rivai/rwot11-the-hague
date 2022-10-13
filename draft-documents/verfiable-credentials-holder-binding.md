@@ -121,11 +121,19 @@ Holder Binding is providing the verifier the means to verify that the presentati
 
 TBD 
 
+
+
 # 2. Problem definition
 
-The verifier may need assurances that the person (or organization - which we from henceforth refer to as a [party](https://essif-lab.github.io/framework/docs/essifLab-glossary#party)) <!-- (maybe entity? No, because anything that exists is an entity, so a stone or a cow are also entities; I would like to not include them here) --> on whose behalf a wallet(like) component has sent a presentation to the verifier, relates to a specific subject<!-- may talk aboUt wallets aswell here as our use case shows it-->  in one (or more) claims of the VCs in the presentation. The problem is that there currently is no well-defined method that the verifier can apply to obtain the assurances that it needs while leaving the (person or organization) in control for ???.
+<!-- #### The actual problem -->
+The verifier may need assurances that the person (or organization - which we from henceforth refer to as a [party](https://essif-lab.github.io/framework/docs/essifLab-glossary#party)) <!-- (maybe entity? No, because anything that exists is an entity, so a stone or a cow are also entities; I would like to not include them here) --> on whose behalf a wallet(like) component has sent a presentation to the verifier, relates to a specific subject<!-- may talk aboUt wallets aswell here as our use case shows it-->  in one (or more) claims of the VCs in the presentation. Currently, there is no well-defined method that the verifier can apply to obtain the assurances that it needs while leaving the (person or organization) in control for ???.
 
-To achieve this, we want to have a data model to represent a way how to ... should consider the following:
+In order to achieve this well-defined method, we propose a mechanism and a data model that allows Holders and/or Issuers to indicate how the Holder Binding can be verified at the time of presentment.
+
+<!-- What is exact the purpose of the next paragraph? Just assumptions and considerations for the proposed model? -->
+
+## 2.1 Considerations 
+To establish a model or mechanism to this problem, the following should be considered:
 - binding should link to a specific credential subject to support VCs that have multiple credential subjects
 - verify that the holder relates to a credential subject (intended holder)
 - verify that the presenter was involved in the issuance process
@@ -145,7 +153,6 @@ TBD: A method to validate that the intended Holder presented a set of VCs wrappe
 
 It binds the following together:
 
-
 Subject of the VC (even if vc.credentialSubject.id is undefined)
 Claims made about the Subject by the Issuer
 Holder of the VC (even if vp.holder.id is undefined)
@@ -154,16 +161,11 @@ Proof in the VC
 
 Verifying a verifiable presentation does not include verifying the binding between the verifiable credential subject and the verifiable presentation holder. There is no normative reference for any existing approach.
 
-For these reasons, this paper describes a mechanism and a data model that allows Holders and/or Issuers to indicate how the Holder Binding can be verified at the time of presentment. Binding multiple Verifiable Credentials to a Holder should be possible. The W3C Verifiable Credentials Data Model 1.1 specification which is essentially equivalent to no guidance on the Holder Binding is provided. This mechanism is fully backward compatible with existing verifiable credentials and verifiable presentations. This paper does not mandate a specific form of holder binding or W3C Verifiable Credential proof type or format. Instead it provides a framework for Issuers, Holders and Verifiers to provide guidance on how Holder Binding can be checked deterministically according to their intentions.
 
-### holder binding with multiple VCs
-linking credentials with
- - holder DIDs
- - link secrets
- - matching attributes/claims
-to leverage  holder binding 
+## 2.2 Binding multiple credentials
+<!--  There is also a paragraph in the introduction section about this, shall we merge these? -->
 
-tbd Paul
+Binding multiple Verifiable Credentials to a Holder should be possible. The W3C Verifiable Credentials Data Model 1.1 specification which is essentially equivalent to no guidance on the Holder Binding is provided. This mechanism is fully backward compatible with existing verifiable credentials and verifiable presentations. This paper does not mandate a specific form of holder binding or W3C Verifiable Credential proof type or format. Instead it provides a framework for Issuers, Holders and Verifiers to provide guidance on how Holder Binding can be checked deterministically according to their intentions.
 
 # 3. Use Cases
 
