@@ -50,16 +50,7 @@ RJ2: We need some text about how holder binding for VCs would differ from that f
  
 Snow note: can't anon cred just be a type of binding? -->
 
-# Introduction
-
-The remainder of this paper is structured as follows:
-- The problem to solve
-- Context
-- Use cases
-- Proposal
-- Conclusion and next steps
-
-## 1. Introduction 
+# 1. Introduction 
 
 <!-- @Rieks, @Zaida: what does it mean for Parties if holderbinding stuff gets included in VCs and VPs, and in the VPs only! -->
 
@@ -71,7 +62,7 @@ All SSI technologies exist to support individuals and [parties](https://essif-la
     3. securely storing VCs on behalf of its principal and providing access to these VCs according to an access policy of its principal (assumed is that any wallet component would read and/or write VCs).
 - **verifying** i.e.: (1) create presentation requests (including those for specific claims) from VCs that are issued on behalf of, possibly multiple parties, (2) sending these requests to wallet components, (3) receiving responses and verifying the various proofs to ensure the content hasn't been tampered with and that the credentials probably originate from designated parties.
 
-### 1.1 Digital Components
+## 1.1 Digital Components
 We use the following terms to refer to digital components that have at least the following functionality:
 - EDV: holder functionality #3 (storing VCs)
 - Issuer component: issuing functionality
@@ -120,8 +111,6 @@ Holder Binding is providing the verifier the means to verify that the presentati
 * difference in semantics -->
 
 TBD 
-
-
 
 # 2. Problem definition
 
