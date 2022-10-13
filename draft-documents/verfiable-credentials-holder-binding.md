@@ -164,14 +164,14 @@ There is a variety of use cases that include different types of holder binding a
 
 This section will contextualize the problem with usecases that has come from the community.
 
-### 3.2 Multiple wallets and issuers
+## 3.2 Multiple wallets and issuers
 
 ![](https://i.imgur.com/d1TvdNW.png)
 Source: https://drive.google.com/drive/folders/1L9oW1QP1fi3iOoiANoWFly0eYscrVFHN
 
 ***Note: the texts in the figure needs to be aligend with that below. The text below is authoritative in this respect.***
 
-#### 3.2.1 Background
+### 3.2.1 Background
 
 The figure above illustrates this use-case, where a person (Alice) has multiple 
 wallets WX, WY and WZ (e.g. an app on her mobile phone, one in the cloud via a web app, and one as a browserplugin). Alice has an Encrypted Data Vault (EDV) that holds the credentials that her wallets obtain, and can provide them to any of her wallets as they need them to construct a presentation.
@@ -182,7 +182,7 @@ Wallets WX and WY have requested a VC from party X and Party Y respectively, obt
 
 The figure shows another party (Party Z), whose verifying component has sent a request to WZ to return a presentation that contains the two credentials that WX and WY obtained and stored in Alice's EDV. So, WZ will access Alice's EDV, get both credentials, turn them into a presentation that it then sends it in response to the request.
 
-#### 3.2.2 Scenario
+### 3.2.2 Scenario
 
 The current VCDM does not provide party Z with a mechanism that enables it to know to which party a VC has been issued, nor to which component it has been issued (where AnonCreds have the implicit property that everything that is sent from a wallet to a verifying component is guaranteed to have been issued to that same wallet). While there are many use-cases in which this is of no importance, there are also situations where it *does* matter.
 
@@ -193,7 +193,7 @@ Here are some examples:
 3. [***summary of use-case zzz to be written***]. In this case, party Z would want to be sure that CredX has been issued to the party on whose behalf the presentation was constructed.
 4. [***summary of use-case ...(etc.) to be written***]. In this case, party Z would want to be sure that ....
 
-#### 3.2.3 Model
+### 3.2.3 Model
 
 We propose to (optionally) add two properties to a VC, and another two (optional) properties to a VP, with the following semantics:
 - the property: `holderComponent` specifies the component to which the VC/VP has been issued, by providing a number of mechanisms that a verifier can use to identify and authenticate the component to which the VC was issued, c.q. that created the VP;
@@ -208,27 +208,27 @@ When parties that issue VCs c.q. construct VPs were to include these properties 
 Note that parties that add these properties, do this as a service to verifying parties, not to serve (or create) some legal obligation. Issuing parties would mention this in the advertisement (as expalined in the introduction)A party would add these properties to a VC, and advertise this,
 
 
-#### 3.2.4 Further Note
+### 3.2.4 Further Note
 In this scenario we want to make sure that the verifier can trust that the credentials presented to them is provided to the rightful controller, Alice, even if the holder-component(wallet) is different. Also potentially any identifier provided in the issuance exchange.
 
 The proposal provided in this document, can make this feasable with a specific holder-binding type, defined for a scenario like this. Meaning this mechanism does not hinder any specific use cases.
 
-### 3.3 Deferred Verification
+## 3.3 Deferred Verification
 
-#### 3.3.1 Background
+### 3.3.1 Background
 
 Alex works at Anon Corp. in Amsterdam and needs to fly for business to Milan.
 In order for the HR department to book a ticket for her, the airline company requires Alex's proof of vaccination against Covid-19 issued by one of the trusted European government health agencies.
 
 Alex's proof of vaccination contains Alex's name and surname, birthdate, vaccine brand, number of vaccinations (i.e., one, two, three, four) and a unique identifier and has been issued to her by the Dutch National Institute for Public Health and the Environment (RIVM).
 
-#### 3.3.1 Scenario
+### 3.3.1 Scenario
 
 To avoid unnecessary correlation, Alex removes the unique identifier from her certificate, which the verifier does not require on the website, and sends over to the HR department only the claims that are relevant for the booking to continue, in a way that still provides the verifier guarantees about the authenticity of those claims and the issuer of the certificate.
 The HR department then fills in the information required to continue with the booking of the flight ticket, which is then sent to Alex.
 The flight ticket is also modeled as a Verifiable Credential, and contains Alex's name, surname and birthdate *as specified on the provided Covid-19 certificate*, seat reserved, flight number, date and time.
 
-#### 3.3.2 Model
+### 3.3.2 Model
 
 A reasonable solution would allow Alex and nobody else to prove, at boarding time, the relation between Alex’s person and the claims in the flight ticket, without necessarily revealing more information than required for the airline company to let Alex on the plane.
 Hence, at boarding time, Alex presents to the gate steward her picture, name, surname, and birthdate from her digital ID document.
@@ -239,14 +239,14 @@ A valid presentation allows Alex to prove she is the rightful owner of the fligh
 
 A similair example is defined in use case 5.3 in W3C's Verifiable Credentials Use Cases (Verifiable Credentials Use Cases, 2019). 
 
-### 3.4 Verifiable credentials for objects
+## 3.4 Verifiable credentials for objects
 
-#### 3.4.1 Background
+### 3.4.1 Background
 A VC can be used for asserting claims about an object, e.g., VCs for food and raw materials are used for enhancing [supply chain security](https://www.ledgerinsights.com/homeland-security-dhs-blockchain-credentials-imports-transmute/), or even as enabler of [circular economy](https://epub.wupperinst.org/frontdoor/index/index/docId/7940). However, such objects not only lack the computational capabilities required for generating a Verifiable Proof, but they also have multiple owners during their lifetime.
 
 Let's consider for example the case of a VC used in each package of coffee "Espresso Italiano". This VC  includes information related to the coffee type, country of origin, production and expiration date. That VC is issued by the packaging factory "Best Coffee" and it is printed in the corresponsing packaging itself using a QRcode.
 
-#### 3.4.2 Scenario
+### 3.4.2 Scenario
 
 Alex, a lorry driver, transfers from "Best Coffee" factory a pallet that includes 1000 packages of "Espresso Italiano", therefore Alex becomes the holder of the corresponding VCs. Alex delivers the pallet to super maket "Billy's market". At the same time, Alex "presents" the credentials to the stock manager system of "Billy's market" 
 
@@ -309,7 +309,7 @@ Alex, a lorry driver, transfers from "Best Coffee" factory a pallet that include
 }
 ```
 
-### 3.4 Parents-Child Relationship
+## 3.4 Parents-Child Relationship
 
 :::warning
 TBD: perhaps dog and dog holder is a better example?
@@ -317,7 +317,7 @@ TBD: perhaps dog and dog holder is a better example?
 
 Notes from bottom: Parent that want to enroll child into primary school, then little child is not gonna present VC stating claims about them, but the parents can do. So, we would need to establish the link of the VC of the child and the parent presenting it. which is another kind of relationship similar to the supply chain case. not the same but similar. we are looking for presentation to encode that. 
 
-### more ...
+## more ...
 
 :::warning
 TBD: add more examples
